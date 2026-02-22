@@ -49,7 +49,7 @@ if [[ ! -v "_c_compilers" ]]; then
       )
     fi
   elif [[ "${_os}" == "Android" ]]; then
-    _c_compiler="clang"
+    _c_compiler="clang>=18"
     _libc="llvm-libs"
     _c_compilers+=(
       "llvm"
@@ -66,7 +66,7 @@ _pyminver=13
 _pkgver="${_pymajver}.${_pyminver}"
 pkgname="${_pkg}${_pkgver}"
 pkgver="${_pkgver}.0"
-pkgrel=6
+pkgrel=7
 _pyver="${pkgver}"
 _pybasever="${_pkgver}"
 _pkgdesc=(
@@ -147,7 +147,7 @@ build() {
     _configure_opts=() \
     _clang18 \
     _msg=()
-  _cc="${_c_compiler}"
+  _cc="${_c_compiler%>*}"
   if [[ "${_jit}" == "true" ]]; then
     _enable_experimental_jit="yes"
     _clang18="$(
@@ -155,7 +155,7 @@ build() {
         -v \
         "clang-18" || \
       true)"
-    if [[ "${_c_compiler}" == "clang" ]]; then
+    if [[ "${_cc}" == "clang" ]]; then
       if [[ "${_clang18}" == "" ]]; then
          mkdir \
            "bin"
@@ -166,7 +166,7 @@ build() {
           true)"
         ln \
           -s \
-	  "${clang}" \
+	  "${_clang}" \
 	  "bin/clang-18"
       fi
     fi
