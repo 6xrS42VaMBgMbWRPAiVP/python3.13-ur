@@ -66,7 +66,7 @@ _pyminver=13
 _pkgver="${_pymajver}.${_pyminver}"
 pkgname="${_pkg}${_pkgver}"
 pkgver="${_pkgver}.0"
-pkgrel=8
+pkgrel=9
 _pyver="${pkgver}"
 _pybasever="${_pkgver}"
 _pkgdesc=(
@@ -146,7 +146,8 @@ build() {
     _enable_experimental_jit \
     _configure_opts=() \
     _clang18 \
-    _msg=()
+    _msg=() \
+    _path
   _cc="${_c_compiler%>*}"
   if [[ "${_jit}" == "true" ]]; then
     _enable_experimental_jit="yes"
@@ -168,6 +169,9 @@ build() {
           -s \
 	  "${_clang}" \
 	  "bin/clang-18"
+	_path="${srcdir}/bin:${PATH}"
+	export
+	  PATH="${_path}"
       fi
     fi
   elif [[ "${_jit}" == "false" ]]; then
